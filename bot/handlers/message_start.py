@@ -35,7 +35,7 @@ class MessageStart(Handler):
 
         messenger.sendMessage(
             chat_id=update["message"]["chat"]["id"],
-            text="🍕 Welcome to Pizza shop!",
+            text="Welcome to Pizza shop!",
             reply_markup=json.dumps({"remove_keyboard": True}),
         )
 

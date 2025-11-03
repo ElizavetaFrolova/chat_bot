@@ -1,36 +1,42 @@
 #!/bin/bash
 
-echo "Создание виртуального окружения..."
+echo "СКРИПТ НАСТРОЙКИ ПРОЕКТА"
+echo "========================"
+
+echo "[1/7] Проверка виртуального окружения..."
 if [ ! -d ".venv" ]; then
     python3 -m venv .venv
-    echo "Виртуальное окружение создано"
+    echo "СОЗДАНО: Виртуальное окружение"
 else
-    echo "Виртуальное окружение уже существует"
+    echo "УЖЕ СУЩЕСТВУЕТ: Виртуальное окружение"
 fi
 
-echo "Активация виртуального окружения в текущей оболочке..."
+echo "[2/7] Активация виртуального окружения..."
 source .venv/bin/activate
 
-echo "Обновление pip и установка основных зависимостей..."
+echo "[3/7] Установка зависимостей..."
 pip install --upgrade pip
 pip install python-dotenv black ruff pytest
 
-echo "Установка зависимостей из requirements.txt..."
 if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt
-    echo "Зависимости установлены"
+    echo "УСТАНОВЛЕНО: requirements.txt"
 else
-    echo "Файл requirements.txt не найден"
+    echo "ПРОПУЩЕНО: requirements.txt не найден"
 fi
 
-echo "Обновление requirements.txt..."
+echo "[4/7] Обновление зависимостей..."
 pip freeze > requirements.txt
 
-echo "Запуск форматирования кода black..."
+echo "[5/7] Форматирование кода..."
 black .
 
-echo "Запуск проверки кода ruff..."
+echo "[6/7] Проверка качества кода..."
 ruff check . --fix
 
-echo "Запуск тестов..."
-python -m pytest tests/
+echo "[7/7] Запуск тестов..."
+PYTHONPATH=. pytest tests/ -v
+
+echo "========================"
+echo "НАСТРОЙКА ЗАВЕРШЕНА"
+echo "Для активации окружения выполните: source .venv/bin/activate"

@@ -71,5 +71,5 @@ def test_message_start_handler():
     assert update_user_state_called
 
     assert len(send_message_calls) == 2
-    assert send_message_calls[0]["text"] == "🍕 Welcome to Pizza shop!"
+    assert send_message_calls[0]["text"] == "Welcome to Pizza shop!"
     assert send_message_calls[1]["text"] == "Please choose pizza type"

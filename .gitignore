@@ -5,3 +5,7 @@ __pycache__
 .venv
 .env
 *.sqlite
+
+# Ruff cache
+.ruff_cache/
+*.ruff_cache
