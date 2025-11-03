@@ -9,7 +9,6 @@ from bot.domain.messenger import Messenger
 load_dotenv()
 
 
-
 class MessengerTelegram(Messenger):
     def _get_telegram_base_uri(self) -> str:
         return f"https://api.telegram.org/bot{os.getenv('TELEGRAM_TOKEN')}"
