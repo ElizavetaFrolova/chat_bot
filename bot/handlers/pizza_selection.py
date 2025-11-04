@@ -34,7 +34,16 @@ class PizzaSelectionHandler(Handler):
         telegram_id = update["callback_query"]["from"]["id"]
         callback_data = update["callback_query"]["data"]
 
-        pizza_name = callback_data.replace("pizza_", "").replace("_", " ").title()
+        pizza_mapping = {
+            "pizza_margherita": "Classic Margherita",
+            "pizza_pepperoni": "Spicy Pepperoni",
+            "pizza_quattro_stagioni": "Four Seasons",
+            "pizza_capricciosa": "Chef's Special",
+            "pizza_diavola": "Hot & Spicy",
+            "pizza_prosciutto": "Ham Delight",
+        }
+
+        pizza_name = pizza_mapping.get(callback_data, "Unknown Pizza")
         storage.update_user_order_json(telegram_id, {"pizza_name": pizza_name})
         storage.update_user_state(telegram_id, "WAIT_FOR_PIZZA_SIZE")
         messenger.answer_callback_query(update["callback_query"]["id"])
@@ -44,17 +53,17 @@ class PizzaSelectionHandler(Handler):
         )
         messenger.sendMessage(
             chat_id=update["callback_query"]["message"]["chat"]["id"],
-            text="Please select pizza size",
+            text="Perfect choice! 🎯 Now select your preferred size:",
             reply_markup=json.dumps(
                 {
                     "inline_keyboard": [
                         [
-                            {"text": "Small (25cm)", "callback_data": "size_small"},
-                            {"text": "Medium (30cm)", "callback_data": "size_medium"},
+                            {"text": "Personal 🍕", "callback_data": "size_small"},
+                            {"text": "Medium 👨‍👩‍👧", "callback_data": "size_medium"},
                         ],
                         [
-                            {"text": "Large (35cm)", "callback_data": "size_large"},
-                            {"text": "Extra Large (40cm)", "callback_data": "size_xl"},
+                            {"text": "Large 👨‍👩‍👧‍👦", "callback_data": "size_large"},
+                            {"text": "Party Size 🎉", "callback_data": "size_xl"},
                         ],
                     ],
                 },

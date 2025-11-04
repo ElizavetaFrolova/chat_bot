@@ -35,33 +35,42 @@ class MessageStart(Handler):
 
         messenger.sendMessage(
             chat_id=update["message"]["chat"]["id"],
-            text="Welcome to Pizza shop!",
+            text="🍕 Welcome to Pizza Palace! 🍕",
             reply_markup=json.dumps({"remove_keyboard": True}),
         )
 
         messenger.sendMessage(
             chat_id=update["message"]["chat"]["id"],
-            text="Please choose pizza type",
+            text="What delicious pizza would you like to order today?",
             reply_markup=json.dumps(
                 {
                     "inline_keyboard": [
                         [
-                            {"text": "Margherita", "callback_data": "pizza_margherita"},
-                            {"text": "Pepperoni", "callback_data": "pizza_pepperoni"},
+                            {
+                                "text": "Classic Margherita",
+                                "callback_data": "pizza_margherita",
+                            },
+                            {
+                                "text": "Spicy Pepperoni",
+                                "callback_data": "pizza_pepperoni",
+                            },
                         ],
                         [
                             {
-                                "text": "Quattro Stagioni",
+                                "text": "Four Seasons",
                                 "callback_data": "pizza_quattro_stagioni",
                             },
                             {
-                                "text": "Capricciosa",
+                                "text": "Chef's Special",
                                 "callback_data": "pizza_capricciosa",
                             },
                         ],
                         [
-                            {"text": "Diavola", "callback_data": "pizza_diavola"},
-                            {"text": "Prosciutto", "callback_data": "pizza_prosciutto"},
+                            {"text": "Hot & Spicy", "callback_data": "pizza_diavola"},
+                            {
+                                "text": "Ham Delight",
+                                "callback_data": "pizza_prosciutto",
+                            },
                         ],
                     ],
                 },

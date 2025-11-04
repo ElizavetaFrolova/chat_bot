@@ -35,9 +35,9 @@ def test_drinks_selection_handler():
     def update_user_order_json(telegram_id: int, order_data: dict) -> None:
         assert telegram_id == 12345
         assert order_data == {
-            "pizza_name": "Margherita",
-            "pizza_size": "Large (35cm)",
-            "drink": "Coca-Cola",
+            "pizza_name": "Classic Margherita",
+            "pizza_size": "Large 👨‍👩‍👧‍👦",
+            "drink": "Coca-Cola 🥤",
         }
 
         nonlocal update_order_json_called
@@ -54,7 +54,7 @@ def test_drinks_selection_handler():
         assert telegram_id == 12345
         return {
             "state": "WAIT_FOR_DRINKS",
-            "order_json": '{"pizza_name": "Margherita", "pizza_size": "Large (35cm)"}',
+            "order_json": '{"pizza_name": "Classic Margherita", "pizza_size": "Large 👨‍👩‍👧‍👦"}',
         }
 
     send_message_calls = []
@@ -105,8 +105,8 @@ def test_drinks_selection_handler():
     assert len(send_message_calls) == 1
 
     message_text = send_message_calls[0]["text"]
-    assert "Your Order Summary:" in message_text
-    assert "**Pizza:** Margherita" in message_text
-    assert "**Size:** Large (35cm)" in message_text
-    assert "**Drink:** Coca-Cola" in message_text
-    assert "Is everything correct?" in message_text
+    assert "Your Order is Ready!" in message_text
+    assert "🍕 **Pizza:** Classic Margherita" in message_text
+    assert "📏 **Size:** Large 👨‍👩‍👧‍👦" in message_text
+    assert "🥤 **Drink:** Coca-Cola 🥤" in message_text
+    assert "Does everything look perfect?" in message_text

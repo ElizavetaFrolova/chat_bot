@@ -34,7 +34,7 @@ def test_pizza_selection_handler():
 
     def update_user_order_json(telegram_id: int, order_data: dict) -> None:
         assert telegram_id == 12345
-        assert order_data == {"pizza_name": "Margherita"}
+        assert order_data == {"pizza_name": "Classic Margherita"}
 
         nonlocal update_order_json_called
         update_order_json_called = True
@@ -96,4 +96,7 @@ def test_pizza_selection_handler():
     assert delete_message_called
 
     assert len(send_message_calls) == 1
-    assert send_message_calls[0]["text"] == "Please select pizza size"
+    assert (
+        send_message_calls[0]["text"]
+        == "Perfect choice! 🎯 Now select your preferred size:"
+    )

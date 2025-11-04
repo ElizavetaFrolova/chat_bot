@@ -47,17 +47,17 @@ class OrderApprovalHandler(Handler):
             pizza_size = order_json.get("pizza_size", "Unknown")
             drink = order_json.get("drink", "Unknown")
 
-            order_confirmation = f"""✅ **Order Confirmed!**
-🍕 **Your Order:**
-• Pizza: {pizza_name}
-• Size: {pizza_size}
-• Drink: {drink}
+            order_confirmation = f"""🎉 **Order Confirmed! Thank You!** 🎉
 
-Thank you for your order! Your pizza will be ready soon.
+🍕 **Your Delicious Order:**
+• {pizza_name}
+• {pizza_size}
+• {drink}
 
-Send /start to place another order."""
+⏰ Your pizza will be ready in 20-25 minutes!
 
-            # Send order confirmation message
+Send /start to order another masterpiece! 🍕"""
+
             messenger.sendMessage(
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 text=order_confirmation,
@@ -67,40 +67,41 @@ Send /start to place another order."""
         elif callback_data == "order_restart":
             storage.clear_user_order_json(telegram_id)
 
-            # Update user state to wait for pizza selection
             storage.update_user_state(telegram_id, "WAIT_FOR_PIZZA_NAME")
 
-            # Send pizza selection message with inline keyboard
             messenger.sendMessage(
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
-                text="Please choose pizza type",
+                text="🍕 Welcome back! What delicious pizza would you like to order today?",
                 reply_markup=json.dumps(
                     {
                         "inline_keyboard": [
                             [
                                 {
-                                    "text": "Margherita",
+                                    "text": "Classic Margherita",
                                     "callback_data": "pizza_margherita",
                                 },
                                 {
-                                    "text": "Pepperoni",
+                                    "text": "Spicy Pepperoni",
                                     "callback_data": "pizza_pepperoni",
                                 },
                             ],
                             [
                                 {
-                                    "text": "Quattro Stagioni",
+                                    "text": "Four Seasons",
                                     "callback_data": "pizza_quattro_stagioni",
                                 },
                                 {
-                                    "text": "Capricciosa",
+                                    "text": "Chef's Special",
                                     "callback_data": "pizza_capricciosa",
                                 },
                             ],
                             [
-                                {"text": "Diavola", "callback_data": "pizza_diavola"},
                                 {
-                                    "text": "Prosciutto",
+                                    "text": "Hot & Spicy",
+                                    "callback_data": "pizza_diavola",
+                                },
+                                {
+                                    "text": "Ham Delight",
                                     "callback_data": "pizza_prosciutto",
                                 },
                             ],

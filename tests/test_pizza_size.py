@@ -34,7 +34,10 @@ def test_pizza_size_handler():
 
     def update_user_order_json(telegram_id: int, order_data: dict) -> None:
         assert telegram_id == 12345
-        assert order_data == {"pizza_name": "Margherita", "pizza_size": "Large (35cm)"}
+        assert order_data == {
+            "pizza_name": "Classic Margherita",
+            "pizza_size": "Large 👨‍👩‍👧‍👦",
+        }
 
         nonlocal update_order_json_called
         update_order_json_called = True
@@ -50,7 +53,7 @@ def test_pizza_size_handler():
         assert telegram_id == 12345
         return {
             "state": "WAIT_FOR_PIZZA_SIZE",
-            "order_json": '{"pizza_name": "Margherita"}',
+            "order_json": '{"pizza_name": "Classic Margherita"}',
         }
 
     send_message_calls = []
@@ -99,4 +102,7 @@ def test_pizza_size_handler():
     assert delete_message_called
 
     assert len(send_message_calls) == 1
-    assert send_message_calls[0]["text"] == "Please choose some drinks"
+    assert (
+        send_message_calls[0]["text"]
+        == "Great size! 🎯 Would you like something to drink with your pizza?"
+    )

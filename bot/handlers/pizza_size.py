@@ -35,10 +35,10 @@ class PizzaSizeHandler(Handler):
         callback_data = update["callback_query"]["data"]
 
         size_mapping = {
-            "size_small": "Small (25cm)",
-            "size_medium": "Medium (30cm)",
-            "size_large": "Large (35cm)",
-            "size_xl": "Extra Large (40cm)",
+            "size_small": "Personal 🍕",
+            "size_medium": "Medium 👨‍👩‍👧",
+            "size_large": "Large 👨‍👩‍👧‍👦",
+            "size_xl": "Party Size 🎉",
         }
 
         pizza_size = size_mapping.get(callback_data)
@@ -55,30 +55,39 @@ class PizzaSizeHandler(Handler):
 
         messenger.sendMessage(
             chat_id=update["callback_query"]["message"]["chat"]["id"],
-            text="Please choose some drinks",
+            text="Great size! 🎯 Would you like something to drink with your pizza?",
             reply_markup=json.dumps(
                 {
                     "inline_keyboard": [
                         [
-                            {"text": "Coca-Cola", "callback_data": "drink_coca_cola"},
-                            {"text": "Pepsi", "callback_data": "drink_pepsi"},
+                            {
+                                "text": "Coca-Cola 🥤",
+                                "callback_data": "drink_coca_cola",
+                            },
+                            {"text": "Pepsi 🥤", "callback_data": "drink_pepsi"},
                         ],
                         [
                             {
-                                "text": "Orange Juice",
+                                "text": "Orange Juice 🍊",
                                 "callback_data": "drink_orange_juice",
                             },
                             {
-                                "text": "Apple Juice",
+                                "text": "Apple Juice 🍎",
                                 "callback_data": "drink_apple_juice",
                             },
                         ],
                         [
-                            {"text": "Water", "callback_data": "drink_water"},
-                            {"text": "Iced Tea", "callback_data": "drink_iced_tea"},
+                            {
+                                "text": "Sparkling Water 💧",
+                                "callback_data": "drink_water",
+                            },
+                            {"text": "Iced Tea 🍵", "callback_data": "drink_iced_tea"},
                         ],
                         [
-                            {"text": "No drinks", "callback_data": "drink_none"},
+                            {
+                                "text": "Just pizza, no drinks ❌",
+                                "callback_data": "drink_none",
+                            },
                         ],
                     ],
                 },
