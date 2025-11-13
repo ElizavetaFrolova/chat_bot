@@ -4,6 +4,8 @@ from enum import Enum
 from bot.domain.messenger import Messenger
 from bot.domain.storage import Storage
 
+from bot.domain.order_state import OrderState
+
 
 class HandlerStatus(Enum):
     CONTINUE = 1
@@ -15,7 +17,7 @@ class Handler(ABC):
     def can_handle(
         self,
         update: dict,
-        state: str,
+        state: OrderState,
         order_json: dict,
         storage: Storage,
         messenger: Messenger,
@@ -25,7 +27,7 @@ class Handler(ABC):
     def handle(
         self,
         update: dict,
-        state: str,
+        state: OrderState,
         order_json: dict,
         storage: Storage,
         messenger: Messenger,

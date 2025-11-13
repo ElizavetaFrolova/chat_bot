@@ -1,11 +1,10 @@
 from bot.domain.messenger import Messenger
+from bot.domain.order_state import OrderState
 from bot.domain.storage import Storage
 from bot.handlers.handler import Handler, HandlerStatus
 
-from bot.domain.order_state import OrderState
 
-
-class UpdateDatabaseLogger(Handler):
+class PreCheckoutQueryHandler(Handler):
     def can_handle(
         self,
         update: dict,
@@ -14,7 +13,7 @@ class UpdateDatabaseLogger(Handler):
         storage: Storage,
         messenger: Messenger,
     ) -> bool:
-        return True
+        return "pre_checkout_query" in update
 
     def handle(
         self,
@@ -24,5 +23,11 @@ class UpdateDatabaseLogger(Handler):
         storage: Storage,
         messenger: Messenger,
     ) -> HandlerStatus:
-        storage.persist_update(update)
-        return HandlerStatus.CONTINUE
+        pre_checkout_query = update["pre_checkout_query"]
+        pre_checkout_query_id = pre_checkout_query["id"]
+
+        messenger.answer_pre_checkout_query(
+            pre_checkout_query_id=pre_checkout_query_id, ok=True
+        )
+
+        return HandlerStatus.STOP

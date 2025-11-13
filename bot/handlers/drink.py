@@ -4,12 +4,14 @@ from bot.domain.messenger import Messenger
 from bot.domain.storage import Storage
 from bot.handlers.handler import Handler, HandlerStatus
 
+from bot.domain.order_state import OrderState
+
 
 class DrinksSelectionHandler(Handler):
     def can_handle(
         self,
         update: dict,
-        state: str,
+        state: OrderState,
         order_json: dict,
         storage: Storage,
         messenger: Messenger,
@@ -17,7 +19,7 @@ class DrinksSelectionHandler(Handler):
         if "callback_query" not in update:
             return False
 
-        if state != "WAIT_FOR_DRINKS":
+        if state != OrderState.WAIT_FOR_DRINKS:
             return False
 
         callback_data = update["callback_query"]["data"]
@@ -26,7 +28,7 @@ class DrinksSelectionHandler(Handler):
     def handle(
         self,
         update: dict,
-        state: str,
+        state: OrderState,
         order_json: dict,
         storage: Storage,
         messenger: Messenger,
@@ -48,7 +50,7 @@ class DrinksSelectionHandler(Handler):
         order_json["drink"] = selected_drink
 
         storage.update_user_order_json(telegram_id, order_json)
-        storage.update_user_state(telegram_id, "WAIT_FOR_ORDER_APPROVE")
+        storage.update_user_state(telegram_id, OrderState.WAIT_FOR_ORDER_APPROVE)
         messenger.answerCallbackQuery(update["callback_query"]["id"])
 
         messenger.deleteMessage(
@@ -56,7 +58,6 @@ class DrinksSelectionHandler(Handler):
             message_id=update["callback_query"]["message"]["message_id"],
         )
 
-        # Create order summary message
         pizza_name = order_json.get("pizza_name", "Unknown")
         pizza_size = order_json.get("pizza_size", "Unknown")
         drink = order_json.get("drink", "Unknown")

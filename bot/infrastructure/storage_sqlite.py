@@ -9,6 +9,7 @@ from bot.domain.storage import Storage
 load_dotenv()
 
 
+
 class StorageSqlite(Storage):
 
     def persist_update(self, update: dict) -> None:

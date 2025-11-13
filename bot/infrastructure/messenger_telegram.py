@@ -53,3 +53,43 @@ class MessengerTelegram(Messenger):
             chat_id=chat_id,
             message_id=message_id,
         )
+    
+    def send_invoice(
+        self,
+        chat_id: int,
+        title: str,
+        description: str,
+        payload: str,
+        provider_token: str,
+        currency: str,
+        prices: list,
+        **kwargs,
+    ) -> dict:
+        telegram_prices = []
+        for price in prices:
+            telegram_prices.append({
+                "label": price["label"],
+                "amount": price["amount"]
+            })
+        
+        return self.makeRequest(
+            "sendInvoice",
+            chat_id=chat_id,
+            title=title,
+            description=description,
+            payload=payload,
+            provider_token=provider_token,
+            currency=currency,
+            prices=telegram_prices,
+            **kwargs,
+        )
+
+    def answer_pre_checkout_query(
+        self, pre_checkout_query_id: str, ok: bool, **kwargs
+    ) -> dict:
+        return self.makeRequest(
+            "answerPreCheckoutQuery",
+            pre_checkout_query_id=pre_checkout_query_id,
+            ok=ok,
+            **kwargs,
+        )
