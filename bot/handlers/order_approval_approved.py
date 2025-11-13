@@ -1,4 +1,3 @@
-import json
 import os
 import time
 
@@ -58,23 +57,23 @@ class OrderApprovalApprovedHandler(Handler):
             "Large (35cm)": 80000,  # 800.00 RUB
             "Extra Large (40cm)": 95000,  # 950.00 RUB
         }
-        
+
         size_mapping = {
             "Personal 🍕": "Small (25cm)",
             "Medium 👨‍👩‍👧": "Medium (30cm)",
-            "Large 👨‍👩‍👧‍👦": "Large (35cm)", 
-            "Party Size 🎉": "Extra Large (40cm)"
+            "Large 👨‍👩‍👧‍👦": "Large (35cm)",
+            "Party Size 🎉": "Extra Large (40cm)",
         }
-        
+
         drink_price = 10000
 
         price_key = size_mapping.get(pizza_size)
-        
+
         if price_key and price_key in pizza_prices:
             pizza_price = pizza_prices[price_key]
         else:
             pizza_price = 50000
-        
+
         prices = [
             {"label": f"Pizza: {pizza_name} ({pizza_size})", "amount": pizza_price}
         ]
@@ -88,7 +87,7 @@ class OrderApprovalApprovedHandler(Handler):
             chat_id=update["callback_query"]["message"]["chat"]["id"],
             title="Pizza Order",
             description=f"Pizza: {pizza_name}, Size: {pizza_size}, Drink: {drink}",
-            payload=order_payload,  
+            payload=order_payload,
             provider_token=os.getenv("YOOKASSA_TOKEN"),
             currency="RUB",
             prices=prices,

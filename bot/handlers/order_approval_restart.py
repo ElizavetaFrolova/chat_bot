@@ -71,10 +71,7 @@ class OrderApprovalRestartHandler(Handler):
                             },
                         ],
                         [
-                            {
-                                "text": "Hot & Spicy", 
-                                "callback_data": "pizza_diavola"
-                            },
+                            {"text": "Hot & Spicy", "callback_data": "pizza_diavola"},
                             {
                                 "text": "Ham Delight",
                                 "callback_data": "pizza_prosciutto",

@@ -53,7 +53,7 @@ class MessengerTelegram(Messenger):
             chat_id=chat_id,
             message_id=message_id,
         )
-    
+
     def send_invoice(
         self,
         chat_id: int,
@@ -67,11 +67,8 @@ class MessengerTelegram(Messenger):
     ) -> dict:
         telegram_prices = []
         for price in prices:
-            telegram_prices.append({
-                "label": price["label"],
-                "amount": price["amount"]
-            })
-        
+            telegram_prices.append({"label": price["label"], "amount": price["amount"]})
+
         return self.makeRequest(
             "sendInvoice",
             chat_id=chat_id,

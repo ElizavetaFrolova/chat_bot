@@ -80,7 +80,7 @@ def test_pizza_selection_handler():
     mock_messenger = Mock(
         {
             "sendMessage": sendMessage,
-            "answer_callback_query": answer_callback_query,
+            "answerCallbackQuery": answer_callback_query,
             "deleteMessage": deleteMessage,
         }
     )
