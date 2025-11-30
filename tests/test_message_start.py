@@ -52,7 +52,7 @@ async def test_message_start_handler():
 
     send_message_calls = []
 
-    async def send_message(chat_id: int, text: str, **kwargs) -> dict:
+    async def sendMessage(chat_id: int, text: str, **kwargs) -> dict:
         assert chat_id == 12345
         send_message_calls.append({"text": text, "kwargs": kwargs})
         return {"ok": True}
@@ -64,7 +64,7 @@ async def test_message_start_handler():
             "get_user": get_user,
         }
     )
-    mock_messenger = Mock({"send_message": send_message})
+    mock_messenger = Mock({"sendMessage": sendMessage})
 
     dispatcher = Dispatcher(mock_storage, mock_messenger)
     dispatcher.add_handlers(MessageStart())

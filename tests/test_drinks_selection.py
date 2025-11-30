@@ -63,18 +63,18 @@ async def test_drinks_selection_handler():
 
     send_message_calls = []
 
-    async def send_message(chat_id: int, text: str, **kwargs) -> dict:
+    async def sendMessage(chat_id: int, text: str, **kwargs) -> dict:
         assert chat_id == 12345
         send_message_calls.append({"text": text, "kwargs": kwargs})
         return {"ok": True}
 
-    async def answer_callback_query(callback_id: str) -> None:
+    async def answerCallbackQuery(callback_id: str) -> None:
         assert callback_id == "callback789"
 
         nonlocal answer_callback_called
         answer_callback_called = True
 
-    async def delete_message(chat_id: int, message_id: int) -> None:
+    async def deleteMessage(chat_id: int, message_id: int) -> None:
         assert chat_id == 12345
         assert message_id == 300
 
@@ -90,9 +90,9 @@ async def test_drinks_selection_handler():
     )
     mock_messenger = Mock(
         {
-            "send_message": send_message,
-            "answer_callback_query": answer_callback_query,
-            "delete_message": delete_message,
+            "sendMessage": sendMessage,
+            "answerCallbackQuery": answerCallbackQuery,
+            "deleteMessage": deleteMessage,
         }
     )
 
