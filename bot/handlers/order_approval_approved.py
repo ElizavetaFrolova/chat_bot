@@ -47,7 +47,7 @@ class OrderApprovalApprovedHandler(Handler):
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 message_id=update["callback_query"]["message"]["message_id"],
             ),
-        storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PAYMENT),
+            storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PAYMENT),
         )
 
         pizza_name = order_json.get("pizza_name", "Unknown")

@@ -49,9 +49,9 @@ class PizzaSelectionHandler(Handler):
         pizza_name = pizza_mapping.get(callback_data, "Unknown Pizza")
 
         await asyncio.gather(
-        storage.update_user_order_json(telegram_id, {"pizza_name": pizza_name}),
-        storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PIZZA_SIZE),
-        messenger.answerCallbackQuery(update["callback_query"]["id"]),
+            storage.update_user_order_json(telegram_id, {"pizza_name": pizza_name}),
+            storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PIZZA_SIZE),
+            messenger.answerCallbackQuery(update["callback_query"]["id"]),
         )
 
         await asyncio.gather(
@@ -67,15 +67,21 @@ class PizzaSelectionHandler(Handler):
                         "inline_keyboard": [
                             [
                                 {"text": "Personal 🍕", "callback_data": "size_small"},
-                                {"text": "Medium 👨‍👩‍👧", "callback_data": "size_medium"},
+                                {
+                                    "text": "Medium 👨‍👩‍👧",
+                                    "callback_data": "size_medium",
+                                },
                             ],
                             [
-                                {"text": "Large 👨‍👩‍👧‍👦", "callback_data": "size_large"},
+                                {
+                                    "text": "Large 👨‍👩‍👧‍👦",
+                                    "callback_data": "size_large",
+                                },
                                 {"text": "Party Size 🎉", "callback_data": "size_xl"},
                             ],
                         ],
                     },
                 ),
             ),
-        )    
+        )
         return HandlerStatus.STOP

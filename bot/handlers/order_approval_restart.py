@@ -35,16 +35,13 @@ class OrderApprovalRestartHandler(Handler):
     ) -> HandlerStatus:
         telegram_id = update["callback_query"]["from"]["id"]
 
-
         await asyncio.gather(
             messenger.answerCallbackQuery(update["callback_query"]["id"]),
             messenger.deleteMessage(
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 message_id=update["callback_query"]["message"]["message_id"],
             ),
-
             storage.clear_user_order_json(telegram_id),
-
             storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PIZZA_NAME),
         )
 

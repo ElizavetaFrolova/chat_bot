@@ -67,14 +67,12 @@ class DrinksSelectionHandler(Handler):
     🥤 **Drink:** {drink}
 
     Does everything look perfect?"""
-        
-        await asyncio.gather(
 
+        await asyncio.gather(
             messenger.deleteMessage(
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 message_id=update["callback_query"]["message"]["message_id"],
             ),
-
             messenger.sendMessage(
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 text=order_summary,

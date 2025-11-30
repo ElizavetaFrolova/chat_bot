@@ -49,7 +49,6 @@ class PizzaSizeHandler(Handler):
         await asyncio.gather(
             storage.update_user_order_json(telegram_id, order_json),
             storage.update_user_state(telegram_id, OrderState.WAIT_FOR_DRINKS),
-
             messenger.answerCallbackQuery(update["callback_query"]["id"]),
         )
 
@@ -58,7 +57,6 @@ class PizzaSizeHandler(Handler):
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 message_id=update["callback_query"]["message"]["message_id"],
             ),
-
             messenger.sendMessage(
                 chat_id=update["callback_query"]["message"]["chat"]["id"],
                 text="Great size! 🎯 Would you like something to drink with your pizza?",
@@ -87,7 +85,10 @@ class PizzaSizeHandler(Handler):
                                     "text": "Sparkling Water 💧",
                                     "callback_data": "drink_water",
                                 },
-                                {"text": "Iced Tea 🍵", "callback_data": "drink_iced_tea"},
+                                {
+                                    "text": "Iced Tea 🍵",
+                                    "callback_data": "drink_iced_tea",
+                                },
                             ],
                             [
                                 {
