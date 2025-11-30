@@ -20,7 +20,7 @@ class SuccessfulPaymentHandler(Handler):
 
         return "successful_payment" in update["message"]
 
-    def handle(
+    async def handle(
         self,
         update: dict,
         state: OrderState,
@@ -49,7 +49,7 @@ class SuccessfulPaymentHandler(Handler):
                 pizza_size = "Unknown"
                 drink = "Unknown"
 
-        storage.update_user_state(telegram_id, OrderState.ORDER_FINISHED)
+        await storage.update_user_state(telegram_id, OrderState.ORDER_FINISHED)
 
         order_confirmation = f"""✅ **Order Confirmed!**
 🍕 **Your Order:**
@@ -61,7 +61,7 @@ Thank you for your payment! Your pizza will be ready soon.
 
 Send /start to place another order."""
 
-        messenger.sendMessage(
+        await messenger.sendMessage(
             chat_id=update["message"]["chat"]["id"],
             text=order_confirmation,
             parse_mode="Markdown",

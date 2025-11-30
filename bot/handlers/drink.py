@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from bot.domain.messenger import Messenger
@@ -25,7 +26,7 @@ class DrinksSelectionHandler(Handler):
         callback_data = update["callback_query"]["data"]
         return callback_data.startswith("drink_")
 
-    def handle(
+    async def handle(
         self,
         update: dict,
         state: OrderState,
@@ -49,13 +50,10 @@ class DrinksSelectionHandler(Handler):
 
         order_json["drink"] = selected_drink
 
-        storage.update_user_order_json(telegram_id, order_json)
-        storage.update_user_state(telegram_id, OrderState.WAIT_FOR_ORDER_APPROVE)
-        messenger.answerCallbackQuery(update["callback_query"]["id"])
-
-        messenger.deleteMessage(
-            chat_id=update["callback_query"]["message"]["chat"]["id"],
-            message_id=update["callback_query"]["message"]["message_id"],
+        await asyncio.gather(
+            storage.update_user_order_json(telegram_id, order_json),
+            storage.update_user_state(telegram_id, OrderState.WAIT_FOR_ORDER_APPROVE),
+            messenger.answerCallbackQuery(update["callback_query"]["id"]),
         )
 
         pizza_name = order_json.get("pizza_name", "Unknown")
@@ -69,26 +67,34 @@ class DrinksSelectionHandler(Handler):
     🥤 **Drink:** {drink}
 
     Does everything look perfect?"""
+        
+        await asyncio.gather(
 
-        messenger.sendMessage(
-            chat_id=update["callback_query"]["message"]["chat"]["id"],
-            text=order_summary,
-            parse_mode="Markdown",
-            reply_markup=json.dumps(
-                {
-                    "inline_keyboard": [
-                        [
-                            {
-                                "text": "✅ Yes, perfect!",
-                                "callback_data": "order_approve",
-                            },
-                            {
-                                "text": "🔄 Start over",
-                                "callback_data": "order_restart",
-                            },
+            messenger.deleteMessage(
+                chat_id=update["callback_query"]["message"]["chat"]["id"],
+                message_id=update["callback_query"]["message"]["message_id"],
+            ),
+
+            messenger.sendMessage(
+                chat_id=update["callback_query"]["message"]["chat"]["id"],
+                text=order_summary,
+                parse_mode="Markdown",
+                reply_markup=json.dumps(
+                    {
+                        "inline_keyboard": [
+                            [
+                                {
+                                    "text": "✅ Yes, perfect!",
+                                    "callback_data": "order_approve",
+                                },
+                                {
+                                    "text": "🔄 Start over",
+                                    "callback_data": "order_restart",
+                                },
+                            ],
                         ],
-                    ],
-                },
+                    },
+                ),
             ),
         )
         return HandlerStatus.STOP

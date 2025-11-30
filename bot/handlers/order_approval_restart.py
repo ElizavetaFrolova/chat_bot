@@ -1,3 +1,4 @@
+import asyncio
 import json
 
 from bot.domain.messenger import Messenger
@@ -24,7 +25,7 @@ class OrderApprovalRestartHandler(Handler):
         callback_data = update["callback_query"]["data"]
         return callback_data == "order_restart"
 
-    def handle(
+    async def handle(
         self,
         update: dict,
         state: OrderState,
@@ -34,17 +35,20 @@ class OrderApprovalRestartHandler(Handler):
     ) -> HandlerStatus:
         telegram_id = update["callback_query"]["from"]["id"]
 
-        messenger.answerCallbackQuery(update["callback_query"]["id"])
-        messenger.deleteMessage(
-            chat_id=update["callback_query"]["message"]["chat"]["id"],
-            message_id=update["callback_query"]["message"]["message_id"],
+
+        await asyncio.gather(
+            messenger.answerCallbackQuery(update["callback_query"]["id"]),
+            messenger.deleteMessage(
+                chat_id=update["callback_query"]["message"]["chat"]["id"],
+                message_id=update["callback_query"]["message"]["message_id"],
+            ),
+
+            storage.clear_user_order_json(telegram_id),
+
+            storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PIZZA_NAME),
         )
 
-        storage.clear_user_order_json(telegram_id)
-
-        storage.update_user_state(telegram_id, OrderState.WAIT_FOR_PIZZA_NAME)
-
-        messenger.sendMessage(
+        await messenger.sendMessage(
             chat_id=update["callback_query"]["message"]["chat"]["id"],
             text="What delicious pizza would you like to order today?",
             reply_markup=json.dumps(

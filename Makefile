@@ -1,4 +1,4 @@
-VENV_DIR = .venv
+	VENV_DIR = .venv
 ACTIVATE_VENV := . $(VENV_DIR)/bin/activate
 
 $(VENV_DIR):

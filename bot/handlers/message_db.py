@@ -1,8 +1,7 @@
 from bot.domain.messenger import Messenger
+from bot.domain.order_state import OrderState
 from bot.domain.storage import Storage
 from bot.handlers.handler import Handler, HandlerStatus
-
-from bot.domain.order_state import OrderState
 
 
 class UpdateDatabaseLogger(Handler):
@@ -16,7 +15,7 @@ class UpdateDatabaseLogger(Handler):
     ) -> bool:
         return True
 
-    def handle(
+    async def handle(
         self,
         update: dict,
         state: OrderState,
@@ -24,5 +23,5 @@ class UpdateDatabaseLogger(Handler):
         storage: Storage,
         messenger: Messenger,
     ) -> HandlerStatus:
-        storage.persist_update(update)
+        await storage.persist_update(update)
         return HandlerStatus.CONTINUE
