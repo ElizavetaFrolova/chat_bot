@@ -1,9 +1,13 @@
+import pytest
+
 from bot.dispatcher import Dispatcher
+from bot.domain.order_state import OrderState
 from bot.handlers.pizza_size import PizzaSizeHandler
 from tests.mocks import Mock
 
 
-def test_pizza_size_handler():
+@pytest.mark.asyncio
+async def test_pizza_size_handler():
     test_update = {
         "update_id": 123456789,
         "callback_query": {
@@ -32,7 +36,7 @@ def test_pizza_size_handler():
     answer_callback_called = False
     delete_message_called = False
 
-    def update_user_order_json(telegram_id: int, order_data: dict) -> None:
+    async def update_user_order_json(telegram_id: int, order_data: dict) -> None:
         assert telegram_id == 12345
         assert order_data == {
             "pizza_name": "Classic Margherita",
@@ -42,14 +46,14 @@ def test_pizza_size_handler():
         nonlocal update_order_json_called
         update_order_json_called = True
 
-    def update_user_state(telegram_id: int, state: str) -> None:
+    async def update_user_state(telegram_id: int, state: OrderState) -> None:
         assert telegram_id == 12345
-        assert state == "WAIT_FOR_DRINKS"
+        assert state == OrderState.WAIT_FOR_DRINKS
 
         nonlocal update_user_state_called
         update_user_state_called = True
 
-    def get_user(telegram_id: int) -> dict | None:
+    async def get_user(telegram_id: int) -> dict | None:
         assert telegram_id == 12345
         return {
             "state": "WAIT_FOR_PIZZA_SIZE",
@@ -58,18 +62,18 @@ def test_pizza_size_handler():
 
     send_message_calls = []
 
-    def sendMessage(chat_id: int, text: str, **kwargs) -> dict:
+    async def send_message(chat_id: int, text: str, **kwargs) -> dict:
         assert chat_id == 12345
         send_message_calls.append({"text": text, "kwargs": kwargs})
         return {"ok": True}
 
-    def answerCallbackQuery(callback_id: str) -> None:
+    async def answer_callback_query(callback_id: str) -> None:
         assert callback_id == "callback456"
 
         nonlocal answer_callback_called
         answer_callback_called = True
 
-    def deleteMessage(chat_id: int, message_id: int) -> None:
+    async def delete_message(chat_id: int, message_id: int) -> None:
         assert chat_id == 12345
         assert message_id == 200
 
@@ -85,16 +89,16 @@ def test_pizza_size_handler():
     )
     mock_messenger = Mock(
         {
-            "sendMessage": sendMessage,
-            "answerCallbackQuery": answerCallbackQuery,
-            "deleteMessage": deleteMessage,
+            "send_message": send_message,
+            "answer_callback_query": answer_callback_query,
+            "delete_message": delete_message,
         }
     )
 
     dispatcher = Dispatcher(mock_storage, mock_messenger)
     dispatcher.add_handlers(PizzaSizeHandler())
 
-    dispatcher.dispatch(test_update)
+    await dispatcher.dispatch(test_update)
 
     assert update_order_json_called
     assert update_user_state_called
